@@ -3,7 +3,9 @@
     <TheHeader />
 
     <main class="main-container">
-      <router-view />
+      <transition mode="out-in">
+        <router-view />
+      </transition>
     </main>
 
     <TheFooter />
@@ -55,6 +57,10 @@ a {
 img {
   max-width: 100%;
   display: block;
+}
+
+label {
+  margin-bottom: 5px;
 }
 
 input,
