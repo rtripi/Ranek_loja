@@ -72,7 +72,7 @@ export default {
           .then((r) => {
             this.produtos = r;
           }); */
-      }, 1000);
+      }, 500);
     },
   },
   watch: {
