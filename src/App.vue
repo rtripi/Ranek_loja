@@ -15,11 +15,24 @@
 <script>
 import TheFooter from "@/components/TheFooter.vue";
 import TheHeader from "@/components/TheHeader.vue";
+import { api } from "@/services.js";
 
 export default {
   components: {
     TheHeader,
     TheFooter,
+  },
+  created() {
+    if (window.localStorage.token) {
+      api
+        .validateToken()
+        .then(() => {
+          this.$store.dispatch("getUser");
+        })
+        .catch(() => {
+          window.localStorage.removeItem("token");
+        });
+    }
   },
 };
 </script>
@@ -72,6 +85,7 @@ textarea {
   transition: all 0.3s;
   font-size: 1rem;
   margin-bottom: 15px;
+  width: 100%;
 }
 input:hover,
 input:focus,
@@ -128,5 +142,11 @@ textarea:focus {
 .v-enter-active,
 .v-leave-active {
   transition: all 0.3s;
+}
+
+button[disabled],
+button[disabled]:hover {
+  background: #bbc;
+  transform: scale(1);
 }
 </style>

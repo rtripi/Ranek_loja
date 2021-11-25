@@ -1,6 +1,7 @@
 <template>
   <section>
     <h2>Informações para Envio</h2>
+    <ErroNotificacao :erros="erros" />
     <usuario-form>
       <button class="btn" @click.prevent="finalizarCompra">
         Finalizar Compra
@@ -16,6 +17,11 @@ import { mapState } from "vuex";
 
 export default {
   name: "FinalizarCompra",
+  data() {
+    return {
+      erros: [],
+    };
+  },
   props: ["produto"],
   components: { UsuarioForm },
   computed: {
@@ -43,12 +49,14 @@ export default {
         .then(() => this.$router.push({ name: "compras" }));
     },
     async criarUsuario() {
+      this.erros = [];
       try {
         await this.$store.dispatch("criarUsuario", this.$store.state.usuario);
-        await this.$store.dispatch("getUser", this.$store.state.usuario.email);
+        await this.$store.dispatch("logarUsuario", this.$store.state.usuario);
+        await this.$store.dispatch("getUser");
         await this.criarTransacao();
       } catch (err) {
-        console.log(err);
+        this.erros.push(err.response.data.message);
       }
     },
     finalizarCompra() {

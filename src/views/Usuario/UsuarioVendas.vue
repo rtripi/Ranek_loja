@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     getVendas() {
-      api.get(`/transacao?vendedor_id=${this.usuario.id}`).then((r) => {
+      api.get(`/transacao?tipo=vendedor_id`).then((r) => {
         this.vendas = r.data;
       });
     },
@@ -85,5 +85,15 @@ h2 {
 h3 {
   justify-self: end;
   margin: 0px;
+}
+
+@media screen and (max-width: 500px) {
+  .entrega {
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+  }
+  h3 {
+    justify-self: start;
+  }
 }
 </style>

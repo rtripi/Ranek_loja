@@ -44,4 +44,11 @@ export default {
   overflow: hidden;
   max-height: 100px;
 }
+
+@media screen and (max-width: 500px) {
+  .produto {
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+  }
+}
 </style>

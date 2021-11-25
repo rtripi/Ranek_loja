@@ -38,20 +38,31 @@ export default new Vuex.Store({
   },
   actions: {
     getUsuarioProdutos(context) {
-      api.get(`/produto?usuario_id=${context.state.usuario.id}`).then((r) => {
-        context.commit("UPDATE_USUARIO_PRODUTOS", r.data);
-      });
+      return api
+        .get(`/produto?usuario_id=${context.state.usuario.id}`)
+        .then((r) => {
+          context.commit("UPDATE_USUARIO_PRODUTOS", r.data);
+        });
     },
-    getUser(context, payload) {
-      return api.get(`/usuario/${payload}`).then((r) => {
+    getUser(context) {
+      return api.get(`/usuario`).then((r) => {
         context.commit("UPDATE_USUARIO", r.data);
-
         context.commit("UPDATE_LOGIN", true);
       });
     },
     criarUsuario(context, payload) {
       context.commit("UPDATE_USUARIO", { id: payload.email });
       return api.post("/usuario", payload);
+    },
+    logarUsuario(context, payload) {
+      return api
+        .login({
+          username: payload.email,
+          password: payload.senha,
+        })
+        .then((response) => {
+          window.localStorage.token = `Bearer ${response.data.token}`;
+        });
     },
     deslogarUsuario(context) {
       context.commit("UPDATE_USUARIO", {
@@ -66,6 +77,7 @@ export default new Vuex.Store({
         cidade: "",
         estado: "",
       });
+      window.localStorage.removeItem("token");
       context.commit("UPDATE_LOGIN", false);
     },
   },

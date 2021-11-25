@@ -5,7 +5,7 @@
     <label for="preco">Preço</label>
     <input type="number" name="preco" id="preco" v-model="produto.preco" />
     <label for="fotos">Fotos</label>
-    <input type="file" name="fotos" id="fotos" ref="fotos" />
+    <input type="file" name="fotos" id="fotos" ref="fotos" multiple />
     <label for="descricao">Descrição</label>
     <textarea
       name="descricao"
@@ -39,13 +39,33 @@ export default {
   },
   methods: {
     formatarProduto() {
-      this.produto.usuario_id = this.$store.state.usuario.id;
+      const form = new FormData();
+
+      const files = this.$refs.fotos.files;
+      for (let i = 0; i < files.length; i++) {
+        form.append(files[i].name, files[i]);
+      }
+
+      form.append("nome", this.produto.nome);
+      form.append("preco", this.produto.preco);
+      form.append("descricao", this.produto.descricao);
+      form.append("vendido", this.produto.vendido);
+      form.append("usuario_id", this.$store.state.usuario.id);
+
+      return form;
     },
-    AdicionarProduto() {
-      this.formatarProduto();
-      api
-        .post("/produto", this.produto)
-        .then(() => this.$store.dispatch("getUsuarioProdutos"));
+    async AdicionarProduto(event) {
+      const produto = this.formatarProduto();
+
+      const btn = event.currentTarget;
+      btn.value = "Adicionando...";
+      btn.setAttribute("disabled", "");
+
+      await api.post("/produto", produto);
+      await this.$store.dispatch("getUsuarioProdutos");
+
+      btn.removeAttribute("disabled");
+      btn.value = "Adicionar Produto";
     },
   },
 };

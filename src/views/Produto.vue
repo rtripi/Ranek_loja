@@ -3,7 +3,7 @@
     <div class="produto" v-if="produto">
       <ul class="fotos" v-if="produto.fotos">
         <li v-for="(foto, index) in produto.fotos" :key="index">
-          <img :src="foto.source" :alt="foto.titulo" />
+          <img :src="foto.src" :alt="foto.titulo" />
         </li>
       </ul>
       <div class="info">
@@ -39,7 +39,10 @@ export default {
   },
   methods: {
     getProduto() {
-      api.get(`/produto/${this.id}`).then((r) => (this.produto = r.data));
+      api.get(`/produto/${this.id}`).then((r) => {
+        this.produto = r.data;
+        document.title = this.produto.nome;
+      });
     },
   },
   created() {
@@ -51,7 +54,7 @@ export default {
 <style scoped>
 .produto {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 30px;
   max-width: 900px;
   padding: 60px 20px;
@@ -65,12 +68,38 @@ export default {
   margin-bottom: 40px;
 }
 
+.fotos {
+  grid-row: 1/3;
+}
+
+.info {
+  position: sticky;
+  top: 0px;
+}
 .descricao {
   font-size: 1.2rem;
+}
+
+img {
+  margin-bottom: 30px;
+  box-shadow: 0 4px 8px rgba(30, 60, 90, 0.2);
+  border-radius: 4px;
 }
 
 .btn {
   margin-top: 60px;
   width: 200px;
+}
+
+@media screen and (max-width: 500px) {
+  .produto {
+    grid-template-columns: 1fr;
+  }
+  .fotos {
+    grid-row: 2;
+  }
+  .info {
+    position: initial;
+  }
 }
 </style>

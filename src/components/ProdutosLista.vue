@@ -61,18 +61,17 @@ export default {
   methods: {
     getProdutos() {
       this.produtos = null;
-      setTimeout(() => {
-        api.get(this.url).then((r) => {
-          this.produtosTotal = Number(r.headers["x-total-count"]);
-          this.produtos = r.data;
-        });
 
-        /* fetch("http://localhost:3000/produto")
+      api.get(this.url).then((r) => {
+        this.produtosTotal = Number(r.headers["x-total-count"]);
+        this.produtos = r.data;
+      });
+
+      /* fetch("http://localhost:3000/produto")
           .then((r) => r.json())
           .then((r) => {
             this.produtos = r;
           }); */
-      }, 500);
     },
   },
   watch: {
@@ -97,6 +96,14 @@ export default {
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   margin: 30px;
+}
+
+@media screen and (max-width: 500px) {
+  .produtos {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    margin: 10px;
+  }
 }
 
 .produto {

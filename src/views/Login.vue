@@ -7,8 +7,15 @@
       <label for="senha">Senha</label>
       <input type="password" name="senha" id="senha" v-model="login.senha" />
       <button class="btn" @click.prevent="logar">Logar</button>
+      <ErroNotificacao :erros="erros" />
     </form>
-    <p class="perdeu"><a href="/" target="_blanck">Perdi a senha</a></p>
+    <p class="perdeu">
+      <a
+        href="http://localhost/ranek/wp-login.php?action=lostpassword"
+        target="_blanck"
+        >Perdi a senha</a
+      >
+    </p>
     <LoginCriar />
   </section>
 </template>
@@ -26,13 +33,26 @@ export default {
         email: "",
         senha: "",
       },
+      erros: [],
     };
   },
   methods: {
     logar() {
-      this.$store.dispatch("getUser", this.login.email);
-      this.$router.push({ name: "Usuario" });
+      this.erros = [];
+      this.$store
+        .dispatch("logarUsuario", this.login)
+        .then(() => {
+          this.$store.dispatch("getUser");
+          this.$router.push({ name: "Usuario" });
+        })
+        .catch((erro) => {
+          console.log(erro);
+          this.erros.push(erro.response.data.message);
+        });
     },
+  },
+  created() {
+    document.title = "Login";
   },
 };
 </script>
